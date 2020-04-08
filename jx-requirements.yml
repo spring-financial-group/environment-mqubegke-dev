@@ -1,35 +1,104 @@
+autoUpdate:
+  enabled: false
+  schedule: ""
+bootConfigURL: https://github.com/jenkins-x/jenkins-x-boot-config.git
 cluster:
-  clusterName: ""
-  environmentGitOwner: ""
-  environmentGitPublic: false
-  project: ""
+  clusterName: mqubegke
+  devEnvApprovers:
+  - mikelear
+  - tomhobson
+  - craggs
+  - poliakhd
+  environmentGitOwner: spring-financial-group
+  gitKind: github
+  gitName: github
+  gitServer: https://github.com
+  namespace: jx
+  project: mqube-jx-cluster
   provider: gke
-  zone: ""
-gitops: true
+  registry: gcr.io
+  zone: europe-west1-b
 environments:
-- key: dev
-- key: staging
-- key: production
+- ingress:
+    domain: mqube.co.uk
+    externalDNS: true
+    namespaceSubDomain: dev
+    tls:
+      email: tom.hobson@mqube.com
+      enabled: true
+      production: true
+  key: dev
+  repository: environment-mqubegke-dev
+- ingress:
+    domain: mqube.co.uk
+    externalDNS: true
+    namespaceSubDomain: staging
+    tls:
+      email: tom.hobson@mqube.com
+      enabled: true
+      production: true
+  key: staging
+  repository: environment-mqubegke-staging
+- ingress:
+    domain: ""
+    externalDNS: false
+    namespaceSubDomain: ""
+    tls:
+      email: ""
+      enabled: false
+      production: false
+  key: endtoend
+  repository: environment-mqubegke-endtoend
+- ingress:
+    domain: mqube.co.uk
+    externalDNS: true
+    namespaceSubDomain: demo
+    tls:
+      email: tom.hobson@mqube.com
+      enabled: true
+      production: true
+  key: demo
+  repository: environment-mqubegke-demo
+- ingress:
+    domain: mqube.co.uk
+    externalDNS: true
+    namespaceSubDomain: demo
+    tls:
+      email: tom.hobson@mqube.com
+      enabled: true
+      production: true
+  key: production
+  repository: environment-mqubegke-production
 ingress:
-  domain: ""
-  externalDNS: false
+  cloud_dns_secret_name: external-dns-gcp-sa
+  domain: mqube.co.uk
+  externalDNS: true
+  namespaceSubDomain: -jx.
   tls:
-    email: ""
-    enabled: false
-    production: false
+    email: tom.hobson@mqube.com
+    enabled: true
+    production: true
 kaniko: true
-secretStorage: local
+repository: nexus
+secretStorage: vault
 storage:
+  backup:
+    enabled: false
+    url: ""
   logs:
-    enabled: false
-    url: ""
+    enabled: true
+    url: gs://mqubegke-logs-cc6b2028-28a8-4447-8954-42710fb79af2
   reports:
-    enabled: false
-    url: ""
+    enabled: true
+    url: gs://mqubegke-reports-d38f7d45-7f38-41c8-b507-cfd71cacfe22
   repository:
-    enabled: false
-    url: ""
+    enabled: true
+    url: gs://mqubegke-repository-af38acd3-251c-4040-ba7d-4aff7a12447
+vault: {}
+velero:
+  schedule: ""
+  ttl: ""
 versionStream:
-  ref: "master"
+  ref: v1.0.404
   url: https://github.com/jenkins-x/jenkins-x-versions.git
 webhook: prow
